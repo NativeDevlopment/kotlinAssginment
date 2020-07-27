@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Assignment</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="reload">reload</string>
+    <string name="name">Name</string>
+    <string name="graveter_id">Graveter Id</string>
+    <string name="node_id">Node Id</string>
+    <string name="url">Url</string>
+    <string name="html_url">Html Url</string>
+    <string name="followers_url">Followers Url</string>
+</resources>
