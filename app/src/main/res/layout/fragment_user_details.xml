@@ -15,6 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="false"
         android:background="@color/white"
         tools:context=".UserDetailsFragment">
 
@@ -41,7 +42,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_weight="0.5"
-            android:text="@{viewModel.users.login}"
+            android:text="@string/name"
             android:textSize="@dimen/_15sdp"
             android:padding="@dimen/_5sdp"
             android:textColor="@color/colorPrimary"
@@ -50,8 +51,8 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:text="@{viewModel.users.login}"
 
-                android:text="@string/name"
                 android:textSize="@dimen/_15sdp"
                 android:padding="@dimen/_5sdp"
                 android:textColor="@color/colorPrimary"

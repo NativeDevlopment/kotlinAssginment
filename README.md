@@ -13,6 +13,7 @@ the following Architecture Components:
 It uses [Dagger](https://developer.android.com/training/dependency-injection/dagger-basics)
 for dependency injection.
 
+
 ```
 Copyright (C) 2020 The Android Open Source Project
 
