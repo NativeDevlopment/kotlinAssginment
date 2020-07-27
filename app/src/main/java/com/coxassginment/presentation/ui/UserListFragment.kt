@@ -32,18 +32,20 @@ class UserListFragment:  BaseFragment<FragmentUserListBinding,UserListViewModel>
         super.onActivityCreated(savedInstanceState)
         viewModel.getUserListData()
         viewModel.id.observe(viewLifecycleOwner, Observer {
-            Log.e("user id",""+it)
-            val arg=Bundle()
-            arg.putLong("Id",it)
-            val fragment=UserDetailsFragment.newInstance()
-            fragment.arguments=arg
-            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
-                ?.add(R.id.container, fragment)?.commit()
+            navigateToUserDetails(it)
 
         })
 
     }
 
+ private fun  navigateToUserDetails(id:Long){
+        val arg=Bundle()
+        arg.putLong("Id",id)
+        val fragment=UserDetailsFragment.newInstance()
+        fragment.arguments=arg
+        activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+            ?.add(R.id.container, fragment)?.commit()
+    }
     override fun onStart() {
         super.onStart()
         val arg=Bundle()
