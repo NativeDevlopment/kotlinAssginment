@@ -1,18 +1,16 @@
 package com.coxassginment.presentation.ui
 
 import android.util.Log
-import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableList
-import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.coxassginment.R
 import com.coxassginment.BR
 import com.coxassginment.data.local.dao.GitUsersDao
 import com.coxassginment.data.local.entity.GitUsers
-import com.coxassginment.data.local.entity.map
-import com.coxassginment.data.network.Entity
 import com.coxassginment.data.network.GitRepository
+import com.coxassginment.data.network.Resource
 import com.coxassginment.data.network.ResultState
 import com.coxassginment.presentation.ui.listner.OnItemClickListener
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +22,12 @@ import javax.inject.Inject
 class UserListViewModel @Inject constructor(val gitRepository:GitRepository ,val gitUsersDao: GitUsersDao) :BaseViewModel() {
 
     val isLoading = MutableLiveData<Boolean>()
+    private val loadTrigger = MutableLiveData(Unit)
+
     val isError = MutableLiveData<Boolean>()
     var errorString = MutableLiveData<String>()
     var userList: MutableLiveData<List<GitUsers>> = MutableLiveData()
+    //  var responseData: LiveData<Resource<List<GitUsers>>> = MutableLiveData()
     var id=MutableLiveData<Long>()
     val gitUserListBinding = ItemBinding.of<GitUsers> { todoListBinding, _, _ ->
         todoListBinding.set(BR.item, R.layout.item_user_list).
@@ -38,51 +39,36 @@ class UserListViewModel @Inject constructor(val gitRepository:GitRepository ,val
         })
 
     }
-    fun  getUserListData(){
-        isLoading.postValue(true)
+    fun uiHandler(resourceData: Resource<List<GitUsers>>) {
+        when(resourceData.status){
+            Resource.Status.LOADING->{
+                isLoading.postValue(true)
+                isError.postValue(false)
+            }
+            Resource.Status.SUCCESS -> {
+                if (!resourceData.data.isNullOrEmpty()) {
 
-        viewModelScope.launch(Dispatchers.IO) {
-            val resp=getLocalUserData()
 
-            if(resp.isNotEmpty()){
-                withContext(Dispatchers.Main){
                     isLoading.postValue(false)
                     isError.postValue(false)
-                    userList.postValue(resp)
+                    userList.postValue(resourceData.data)
+
                 }
-            }else {
-                when (val response = gitRepository.getUserList()) {
-                    is ResultState.Loading -> {
-                        withContext(Dispatchers.Main){
-                            isLoading.value=true}
-                    }
-                    is ResultState.Success -> {
-                        val  userData=getLocalUserData()
-                        withContext(Dispatchers.Main) {
-                            isLoading.postValue(false)
-                            isError.postValue(false)
-                            userList.postValue(userData)
-                        }
-
-                    }
-                    is ResultState.Error -> {
-                        withContext(Dispatchers.Main) {
-                            isError.postValue(true)
-                            isLoading.postValue( false)
-
-                            response.error?.let {
-                                errorString.postValue(it.errors[0].errorMessage)
-
-                            }
-                        }
-                    }
-                }
+            }
+            Resource.Status.ERROR->{
+                isLoading.postValue(false)
+                isError.postValue(true)
+                errorString.postValue(resourceData.message)
             }
         }
     }
-    private  fun getLocalUserData():List<GitUsers> {
-        Log.e("thread name",Thread.currentThread().name)
-        return   gitUsersDao.select()
+    fun  getUserListData() {
+        isLoading.postValue(true)
+        loadTrigger.value=Unit
+
     }
+    val responseData: LiveData<Resource<List<GitUsers>>> = loadTrigger.switchMap {
+        gitRepository.getLiveData()    }
+
 
 }

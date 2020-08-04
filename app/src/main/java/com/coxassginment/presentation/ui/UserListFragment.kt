@@ -1,16 +1,11 @@
 package com.coxassginment.presentation.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.coxassginment.BR
 import com.coxassginment.R
+import com.coxassginment.data.network.Resource
 import com.coxassginment.databinding.FragmentUserListBinding
 import com.google.firebase.analytics.FirebaseAnalytics
 
@@ -35,7 +30,14 @@ class UserListFragment:  BaseFragment<FragmentUserListBinding,UserListViewModel>
             navigateToUserDetails(it)
 
         })
+viewModel.responseData.observe(viewLifecycleOwner, Observer {
+    it?.let {
+        viewModel.uiHandler(it)
 
+    }
+
+
+})
     }
 
  private fun  navigateToUserDetails(id:Long){

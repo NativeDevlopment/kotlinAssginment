@@ -10,10 +10,12 @@ class HomeActivity : BaseActivity() {
         setContentView(R.layout.activity_home)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.container, UserListFragment.newInstance())
-                .commit()
+                .replace(R.id.container, UserListFragment.newInstance())
+                .commitNow()
         }
     }
 }

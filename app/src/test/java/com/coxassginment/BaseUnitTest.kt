@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
+import com.coxassginment.data.local.database.AppDb
 import com.coxassginment.di.module.application.*
 import io.kotlintest.mock.`when`
 import io.reactivex.schedulers.TestScheduler
@@ -38,6 +39,7 @@ abstract class BaseUnitTest{
     lateinit var repositoryModule: RepositoryModule
     lateinit var dbModule: DbModule
     lateinit var apiModule: ApiModule
+    lateinit var appDb: AppDb
     lateinit var retrofit: Retrofit
     lateinit var testScheduler: TestScheduler
 
@@ -136,12 +138,13 @@ abstract class BaseUnitTest{
         repositoryModule = RepositoryModule()
         apiModule = ApiModule()
         dbModule= DbModule()
+       appDb= dbModule.provideAppDatabase(context)
         val retrofitModule = RetrofitModule()
         val interceptor = Interceptors()
-      //  val interceptors = interceptor.headerInterceptor(sharedPreferences)
+       val interceptors = interceptor.networkConnectionInterceptor(context)
         val okHttpClientModule = OkHttpClientModule()
         val createLoggingInterceptor = okHttpClientModule.httpLoggingInterceptor()
-        val httpClient = okHttpClientModule.okHttpClient(/*cache,*/ createLoggingInterceptor)
+        val httpClient = okHttpClientModule.okHttpClient(/*cache,*/ createLoggingInterceptor,interceptors)
         val gson = retrofitModule.gson()
         val gsonConverter = retrofitModule.gsonConverterFactory(gson)
         val serverUrl = mockWebServer.url("/").toString()

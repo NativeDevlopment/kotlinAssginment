@@ -9,7 +9,7 @@ import com.coxassginment.data.local.entity.GitUsers
 interface GitUsersDao   {
 
     @Query("SELECT * FROM GitUsers")
-      fun select(): List<GitUsers>
+      fun select(): LiveData<List<GitUsers>>
     @Insert(onConflict = OnConflictStrategy.REPLACE)
      fun insert(obj: GitUsers)
     @Insert(onConflict = OnConflictStrategy.REPLACE)

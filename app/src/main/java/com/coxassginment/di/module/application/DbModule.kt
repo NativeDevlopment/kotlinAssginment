@@ -1,9 +1,11 @@
 package com.coxassginment.di.module.application
 
+import android.content.Context
 import androidx.room.Room
 import com.coxassginment.BaseApplication
 import com.coxassginment.data.local.dao.GitUsersDao
 import com.coxassginment.data.local.database.AppDb
+import com.coxassginment.di.qualifier.ApplicationContext
 
 import dagger.Module
 import dagger.Provides
@@ -15,8 +17,8 @@ class DbModule {
 
     @Provides
     @Singleton
-    internal fun provideAppDatabase(): AppDb {
-        return Room.databaseBuilder(BaseApplication.applicationContext(), AppDb::class.java, "assignment.db").allowMainThreadQueries().build()
+    internal fun provideAppDatabase(@ApplicationContext context: Context): AppDb {
+        return Room.databaseBuilder(context, AppDb::class.java, "assignment.db").build()
     }
 
     @Provides

@@ -13,7 +13,7 @@ buildscript {
         okio_version = '2.3.0'
         lifecycleVersion = '2.0.0'
         powermock_version = '2.0.0-beta.5'
-        mockito_version = '3.3.1'
+        mockito_version = '3.3.3'
         junit_version = '4.13'
         test_runner_version='1.1.0'
         okio_version = '2.3.0'
